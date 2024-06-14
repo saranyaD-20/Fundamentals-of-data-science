@@ -1,0 +1,27 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Sample data frame initialization (replace with your actual data)
+data = {
+    'customer_id': [1, 2, 3, 4, 5],
+    'age': [25, 30, 22, 30, 25],
+    'purchase_amount': [100, 150, 200, 100, 300],
+    'purchase_date': ['2023-05-01', '2023-05-02', '2023-05-03', '2023-05-04', '2023-05-05']
+}
+
+df = pd.DataFrame(data)
+
+# Calculate the frequency distribution of ages
+age_distribution = df['age'].value_counts().sort_index()
+
+# Display the frequency distribution
+print(age_distribution)
+
+# Plot the distribution for visualization
+plt.figure(figsize=(10, 6))
+age_distribution.plot(kind='bar')
+plt.title('Frequency Distribution of Customer Ages')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.xticks(rotation=0)
+plt.show()

@@ -1,0 +1,91 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor, export_text
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+import matplotlib.pyplot as plt
+
+# Load the dataset
+# Assuming the dataset is named 'car_data.csv' and contains relevant features and the target 'price'
+# df = pd.read_csv('car_data.csv')
+
+# Sample data creation for illustration purposes
+np.random.seed(42)
+df = pd.DataFrame({
+    'age': np.random.randint(1, 15, 100),
+    'mileage': np.random.randint(5000, 200000, 100),
+    'make': np.random.choice(['Ford', 'Toyota', 'BMW', 'Honda'], 100),
+    'model': np.random.choice(['Model1', 'Model2', 'Model3'], 100),
+    'price': np.random.randint(2000, 30000, 100)
+})
+
+# Encode categorical variables
+df = pd.get_dummies(df, columns=['make', 'model'], drop_first=True)
+
+# Splitting the data into features (X) and target (y)
+X = df.drop('price', axis=1)
+y = df['price']
+
+# Splitting the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Building the CART model
+model = DecisionTreeRegressor(random_state=42)
+model.fit(X_train, y_train)
+
+# Evaluate the model
+y_pred = model.predict(X_test)
+mae = mean_absolute_error(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+
+print("Mean Absolute Error (MAE):", mae)
+print("Mean Squared Error (MSE):", mse)
+print("Root Mean Squared Error (RMSE):", rmse)
+
+# Function to get user input for new car features
+def get_user_input():
+    age = int(input("Enter the age of the car (in years): "))
+    mileage = int(input("Enter the mileage of the car: "))
+    make = input("Enter the make of the car (Ford, Toyota, BMW, Honda): ")
+    model = input("Enter the model of the car (Model1, Model2, Model3): ")
+    
+    # Create a dataframe for the new car
+    new_car = pd.DataFrame({
+        'age': [age],
+        'mileage': [mileage],
+        'make_Ford': [1 if make == 'Ford' else 0],
+        'make_Toyota': [1 if make == 'Toyota' else 0],
+        'make_BMW': [1 if make == 'BMW' else 0],
+        'make_Honda': [1 if make == 'Honda' else 0],
+        'model_Model1': [1 if model == 'Model1' else 0],
+        'model_Model2': [1 if model == 'Model2' else 0],
+        'model_Model3': [1 if model == 'Model3' else 0]
+    })
+    
+    # Ensure all columns are present
+    for col in X.columns:
+        if col not in new_car.columns:
+            new_car[col] = 0
+            
+    return new_car
+
+# Get user input
+new_car = get_user_input()
+
+# Predict the price of the new car
+predicted_price = model.predict(new_car)
+print(f"The predicted price of the new car is: ${predicted_price[0]:.2f}")
+
+# Display the decision path
+decision_path = model.decision_path(new_car)
+feature_names = X.columns
+tree_rules = export_text(model, feature_names=feature_names)
+print("Decision path for the prediction:")
+print(tree_rules)
+
+# Visualize the decision tree
+plt.figure(figsize=(20,10))
+from sklearn.tree import plot_tree
+plot_tree(model, feature_names=X.columns, filled=True, rounded=True, fontsize=10)
+plt.show()

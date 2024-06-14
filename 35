@@ -1,0 +1,29 @@
+from collections import Counter
+import re
+
+# Sample data (replace with your actual data)
+reviews = [
+    "This product is great! I love it.",
+    "The quality of this product is excellent.",
+    "Not satisfied with the product. It broke after a week."
+]
+
+# Function to preprocess text (remove punctuation and convert to lowercase)
+def preprocess_text(text):
+    text = text.lower()  # Convert to lowercase
+    text = re.sub(r'[^\w\s]', '', text)  # Remove punctuation
+    return text
+
+# Tokenize and preprocess the reviews
+words = []
+for review in reviews:
+    review = preprocess_text(review)
+    words.extend(review.split())
+
+# Calculate frequency distribution of words
+word_counts = Counter(words)
+
+# Print the frequency distribution
+print("Frequency distribution of words:")
+for word, frequency in word_counts.items():
+    print(f"{word}: {frequency} times")

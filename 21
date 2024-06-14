@@ -1,0 +1,15 @@
+import numpy as np
+
+data = np.array([10000, 20000, 25000, 30000])
+
+# Calculate the total sales for the year
+total_sales = np.sum(data)
+print("Total sales for the year:", total_sales)
+
+# Extract sales for the first and fourth quarters
+q1_sales = data[0]
+q4_sales = data[-1]
+
+# Calculate the percentage increase from the first quarter to the fourth quarter
+percentage_increase = ((q4_sales - q1_sales) / q1_sales) * 100
+print("Percentage increase in sales from the first quarter to the fourth quarter:", percentage_increase)

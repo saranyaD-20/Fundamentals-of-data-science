@@ -1,0 +1,22 @@
+items_price = [6, 5, 10, 2]
+quantities = [3, 2, 4, 1]
+discount = 10
+tax = 8
+
+# Calculate the total cost before any discount or tax
+total_cost = sum(price * quantity for price, quantity in zip(items_price, quantities))
+
+# Calculate the discount amount
+discount_amt = (discount / 100) * total_cost
+
+# Calculate the total cost after applying the discount
+total_cost_after_discount = total_cost - discount_amt
+
+# Calculate the tax amount
+tax_amt = (tax / 100) * total_cost_after_discount
+
+# Calculate the total cost after applying the tax
+total_cost_after_tax = total_cost_after_discount + tax_amt
+
+print("Total cost after tax:", total_cost_after_tax)
+print("Total cost after discount:", total_cost_after_discount)
